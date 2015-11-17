@@ -1,0 +1,1253 @@
+#: import ListItemButton kivy.uix.listview.ListItemButton
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter	
+#: import main main
+<MainScreen>:
+	BoxLayout:
+	    orientation: "vertical"
+	    Label:
+		    text: 'Braided Composite Design'
+            text_size: self.size
+            font_size: dp(50)
+            halign: 'center'
+            valign: 'middle'
+	    Image:
+	        canvas:
+                Color:
+                    rgb: (1, 1, 1)
+	        #source: 'cardlogo6.png'
+            source: 'CompositeAppLogo_256.png'
+	        size: 2,2
+	        pos: self.pos
+
+            
+<AngleMeasure>:
+    BoxLayout:
+
+<About_Screen>:
+    BoxLayout:
+	    orientation: "vertical"
+        BoxLayout:
+            #spacing: '10dp'
+            orientation: "horizontal"           
+            Label:
+                text: 'Authors: Garrett Melenka (University of Alberta), Marcus Ivey (University of Alberta)\nemail: gmelenka@ualberta.ca, ivey@ualberta.ca\nSupervisor: Dr. Jason Carey (University of Alberta)\njpcarey@ualberta.ca\nBook: Handbook of Advances in 2D and 3D Braided Composite Materials: Theory, Production, Testing and Applications, Carey JP (Ed), Woodhead Publishing, 2016'
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                #size_hint_y: dp(10)
+	    Image:
+	        canvas:
+                Color:
+                    rgb: (1, 1, 1)
+	        source: 'cardlogo6.png'
+	        size: 2,2
+	        pos: self.pos    
+ 
+<VolumeFraction>:
+	#orientation: 'vertical'
+    #height: '600dp'
+    #size_hint_y: None
+	BoxLayout:
+		orientation: 'vertical'
+		spacing: '10dp'
+        padding: '10dp'
+		Spinner:
+			id: braidType
+			text: "Braid Type"
+			values: "Diamond", "Regular", "Hercules"
+            on_text: root.ShowBraidPattern()
+			#size_hint_y: None
+		Spinner:
+			id: braidCrossSection
+			text: "Select Yarn Shape"
+			values: "Ellipse", "Circle", "Rectangle"
+			#size_hint_y: None
+		BoxLayout:
+			Label:
+				text:"Number of Braider Carriers-N"
+                font_size: dp(10)
+                #text_size: root.width, None
+                size: self.texture_size
+                text_size: self.size
+                halign: 'center'
+                #text_size: self.size
+                #size_hint_y: None
+			TextInput:
+				id: numberYarns
+				text: "8"
+				multiline: False
+                input_type: 'number'
+                #font_size: 10
+                size_hint_x: '0.3dp'
+			Slider:
+				id: carrierSelect
+				value: 8
+				max: 256
+				step: 1
+				on_value: numberYarns.text = '%d' % self.value
+		BoxLayout:
+			Label:
+				text: "Yarn Width-W[sub]y[/sub] (mm)"
+                font_size: dp(10)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+			TextInput:
+				id: yarnWidth
+				text: "3.1"
+				multiline: False
+                input_type: 'number'
+                size_hint_x: '0.3dp'
+			Slider:
+				id: yarnWidthSelect
+				value: 3.1
+				max: 100
+				step: 0.1
+				on_value: yarnWidth.text = str(self.value)
+		BoxLayout:
+			Label:
+				text: "Yarn Thickness-t (mm)"
+                font_size: dp(10)
+                text_size: self.size
+                halign: 'center'
+			TextInput:
+				id: yarnThickness
+				text: "0.38"
+				multiline: False
+                input_type: 'number'
+                size_hint_x: '0.3dp'
+			Slider:
+				id: yarnThicknessSelect
+				value: 0.38
+				step: 0.01
+				max: 10
+				on_value: yarnThickness.text = str(self.value)
+		BoxLayout:
+			Label:
+				text: "Braid Radius -R (mm)"
+                font_size: dp(10)
+                text_size: self.size
+                halign: 'center'
+			TextInput:
+				id: braidRadius
+				text: "12.7"
+				multiline: False
+                input_type: 'number'
+                size_hint_x: '0.3dp'
+			Slider:
+				id: braidRadiusSelect
+				value: 12.7
+				step: 0.1
+				on_value: braidRadius.text = str(self.value)
+		BoxLayout:
+			Label:
+				text: "Braid Angle-%s (%s)" % (unichr(952),unichr(176))
+                font_size: dp(10)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+			TextInput:
+				id: theta
+				text: "45"
+				multiline: False
+                input_type: 'number'
+                size_hint_x: '0.3dp'
+			Slider:
+				id: braidAngleSelect
+				value: 45
+				step: 0.1
+				on_value: theta.text = str(self.value)
+		Button:
+			id: calculateVF
+			text: "Calculate"
+			id: calculate_button
+			on_press: root.CalculateVF('data')
+		BoxLayout:
+			Label: 
+				text: "Volume Fraction"
+                font_size: dp(10)
+                text_size: self.size
+                halign: 'center'
+			TextInput:
+				id: volumeFraction
+				text: "*****"
+				multiline: False
+                readonly: True
+		BoxLayout:
+			Label: 
+				text: "Cover Factor"
+                font_size: dp(10)
+                text_size: self.size
+                halign: 'center'
+			TextInput:
+				id: coverFactor
+				text: "*****"
+				multiline: False
+                readonly: True
+		Image:
+			id: braidPatternImage
+            source: 'CompositeAppLogo_256.png'
+			size_hint_y: None
+			height: dp(60)
+        Button:
+            id: volumeFractionAbout
+            text: "About"
+            on_press: root.AboutVolumeFraction()
+
+<VolumeFractionAbout>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+        Label:
+            text: "Variables:\nBraid Type-Diamond (1/1), Regular (2/2), Hercules (3/3) braid pattern\nYarn shape-assumed cross-sectional shape of braid yarns\nN-Number of yarn carriers of braiding machine\nW[sub]y[/sub]-Width of individual braid yarns\nt-Thickness of braid yarns\nR-Radius of braid mandrel\n%s-Braid angle" % (unichr(952))
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+        Label:
+            text: "Results:\nVolume fraction-ratio of fiber volume to cylinder volume\nCover factor-fraction of braid mandrel covered by yarns"
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+        Button:
+            id: closeVolumeFraction
+            text: "Close"
+            on_press: root.cancel()
+            size_hint_y: '0.25dp'
+
+            
+<Angle>:
+    canvas:
+        Rectangle:
+            source: 'pic4.jpg'
+            size: self.size
+        Color:
+            rgb: (0, 0, 0)
+        Rectangle:
+            pos: self.center_x - dp(77.5), self.height - dp(87.5)
+            size: dp(155), dp(55)
+        Color:
+            rgb: (1, 1, 1)
+        Rectangle:
+            pos: self.center_x - dp(75), self.height - dp(85)
+            size: dp(150), dp(50)
+
+<AngleLayout>:
+	orientation: "vertical"
+	Label:
+		size_hint_y: None
+		height: dp(50)
+	AnchorLayout:
+        id: anchor2
+		anchor_x: "center"
+		FloatLayout:
+			Scatter:
+				id: scatter
+				Image:
+					id: image
+					size_hint: None, None
+					size: root.size
+					background_color: 0, 0, 0, 0
+					source: "braidangle.jpg"
+		AnchorLayout:
+			id: anchor
+			anchor_x: "center"
+	BoxLayout:
+		size_hint_y: None
+		height: dp(60)
+		Button:
+			id: file
+			text: "File"
+			font_size: dp(24)
+			on_release: root.show_load()
+		ToggleButton:
+			id: toggle
+			text: "Draw"
+			font_size: dp(24)
+			on_release: root.initiate_angle_finder()
+        Button:
+			id: reset
+			text: "Reset"
+			font_size: dp(24)
+			on_release: root.reset_image()
+			
+<LoadDialog>:
+	BoxLayout:
+		size: root.size
+		pos: root.pos
+		orientation: "vertical"
+#FileChooserListView:
+		FileChooserThumbView:
+            path: '/sdcard/Pictures/BraidedCompositeApp/TestImages'
+#			path: '/Users/marcusivey/Desktop'
+#			path: '/sdcard/DCIM/Camera'
+#			path: '/sdcard/kivy/Angle Finder Nov 4/Test Images'
+			thumbsize: self.width/3
+			id: filechooser
+		BoxLayout:
+			size_hint_y: None
+			height: dp(40)
+			Button:
+				text: "Cancel"
+				font_size: dp(20)
+				on_release: root.cancel()
+			Button:
+				text: "Select"
+				font_size: dp(20)
+				#on_release: root.load(filechooser.path, filechooser.selection)
+                on_release: root.fileSelect(filechooser.path, filechooser.selection)
+<MicroMechanics>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '5dp'
+        padding: '10dp'
+        Spinner:
+            id: yarnSelectSpinner
+            text: "Select Yarn"
+            values: "E-Glass", "S-Glass", "AS4-Carbon", "T300 Carbon", "Boron", "Kevlar 49", "Custom"
+            on_text: root.fiberSelect()
+        Spinner:
+            id: matrixSelectSpinner
+            text: "Select Matrix"
+            values: "Epoxy", "Polyester", "Polyimides", "PEEK"
+            on_text: root.matrixSelect()
+        BoxLayout:
+            Label:
+                text: "V[sub]f[/sub]"
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #valign: 'middle'
+            TextInput:
+                id: volumeFraction
+                text: '0.5'
+                multiline: False
+                #size_hint_y: None
+                #font_size: 8
+                input_type: 'number'
+            Button:
+                id: vfdown
+                text: "v"
+                on_press: root.volumeFractionDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: vfup
+                text: "^"
+                on_press: root.volumeFractionUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: "E[sub]f1[/sub] (GPa)"
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: longitudinalModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: ef1down
+                text: "v"
+                on_press: root.EF1Down()
+                size_hint_x: '0.25dp'
+            Button:
+                id: ef1up
+                text: "^"   
+                on_press: root.EF1Up()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'E[sub]f2[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: transverseModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: ef2down
+                text: "v"
+                on_press: root.EF2Down()
+                size_hint_x: '0.25dp'
+            Button:
+                id: ef2up
+                text: "^"    
+                on_press: root.EF2Up()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'G[sub]f12[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: shearModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: gf12down
+                text: "v"
+                on_press: root.GF12Down()
+                size_hint_x: '0.25dp'
+            Button:
+                id: gf12up
+                text: "^"
+                on_press: root.GF12Up()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                #text: 'nu[sub]f12[/sub]'
+                text: '%s [sub]f12[/sub]' % unichr(957)
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: majorPoissonRatio
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: nuf12down
+                text: "v"
+                on_press: root.nuf12Down()
+                size_hint_x: '0.25dp'
+            Button:
+                id: nuf12up
+                text: "^"
+                on_press: root.nuf12Up()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'E[sub]m[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: matrixModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: emdown
+                text: "v"
+                on_press: root.EmDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: emup
+                text: "^"
+                on_press: root.EmUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'G[sub]m[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: matrixShearModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: gmdown
+                text: "v"
+                on_press: root.GmDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: gmup
+                text: "^"
+                on_press: root.GmUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                #text: 'nu[sub]m[/sub]'
+                text: '%s [sub]m[/sub]' % unichr(957)
+                text_size: self.size
+                font_size: dp(20)
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: matrixPoissonRatio
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: numdown
+                text: "v"
+                on_press: root.NuMDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: numup
+                text: "^" 
+                on_press: root.NuMUp()
+                size_hint_x: '0.25dp'
+        Button:
+            id: calculate
+            text: "Calculate"
+            on_press: root.CalculateVF('data')
+        BoxLayout:
+            Label:
+                text: 'E[sub]1[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: modulusE1
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                readonly: True
+        BoxLayout:
+            Label:
+                text: 'E[sub]2[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: modulusE2
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                readonly: True
+        BoxLayout:
+            Label:
+                text: 'G[sub]12[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: modulusG12
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                readonly: True
+        BoxLayout:
+            Label:
+                #text: 'nu[sub]12[/sub]'
+                text: '%s [sub]12[/sub]' % unichr(957)
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: poissonNu12
+                text: '-'
+                multiline: False
+                #size_hint_y: None  
+                readonly: True
+        Button:
+            id: aboutMicromechanics
+            text: "About"
+            on_press: root.AboutMicromechanics()
+
+<MicroMechanicsAbout>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+        Label:
+            text: "Variables:\nVF-Fiber volume fraction\nE[sub]f1[/sub]-Fiber longitudinal elastic modulus\nE[sub]f2[/sub]-Fiber transverse elastic modulus\nG[sub]f12[/sub]-Fiber shear modulus\n%s[sub]f12[/sub]-Fiber major Poisson's Ratio\nE[sub]m[/sub]-Matrix elastic modulus\nG[sub]m[/sub]-Matrix shear modulus\n%s[sub]m[/sub]-Matrix Poisson's ratio" % (unichr(957),unichr(957))
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+        Label:
+            text: "Results:\nE[sub]1[/sub]-Composite longitudinal elastic modulus\nE[sub]2[/sub]-Composite transverse elastic modulus\nG[sub]12[/sub]-Composite in-plane shear modulus\n%s[sub]12[/sub]-Composite Major Poisson's Ratio" % unichr(957)
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+        Button:
+            id: closeMicromechanicsAbout
+            text: "Close"
+            on_press: root.cancel()
+            size_hint_y: '0.25dp'
+
+<LaminaStrength>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '5dp'
+        padding: '10dp'
+        Spinner:
+            id: yarnSelectSpinner
+            text: "Select Yarn"
+            values: "E-Glass", "S-Glass", "AS4-Carbon", "T300 Carbon", "Boron", "Kevlar 49", "Custom"
+            on_text: root.fiberSelect()
+        Spinner:
+            id: matrixSelectSpinner
+            text: "Select Matrix"
+            values: "Epoxy", "Polyester", "Polyimides", "PEEK"
+            on_text: root.matrixSelect()
+        BoxLayout:
+            Label:
+                text: 'V[sub]f[/sub]'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: volumeFraction
+                text: '0.5'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: vfdown
+                text: "v"
+                on_press: root.volumeFractionDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: vfup
+                text: "^"
+                on_press: root.volumeFractionUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'E[sub]f1[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: fiberModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: fiberModulusdown
+                text: "v"
+                on_press: root.fiberModulusDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: fiberModulusup
+                text: "^"
+                on_press: root.fiberModulusUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                #text: 'Sigma1f (MPa)'
+                text: '%s[sub]f1[/sub] (MPa)' % unichr(963)
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: fiberStrength
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: fiberStrengthdown
+                text: "v"
+                on_press: root.fiberStrengthDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: fiberstrengthup
+                text: "^"
+                on_press: root.fiberStrengthUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'E[sub]m[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: matrixModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: matrixModulusdown
+                text: "v"
+                on_press: root.matrixModulusDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: matrixModulusup
+                text: "^"
+                on_press: root.matrixModulusUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'G[sub]m[/sub] (GPa)'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: matrixShearModulus
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: matrixShearModulusdown
+                text: "v"
+                on_press: root.matrixShearModulusDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: matrixShearModulusup
+                text: "^"
+                on_press: root.matrixShearModulusUp()
+                size_hint_x: '0.25dp'                
+        Button:
+            id: failureCalculate
+            text: 'Calculate'
+            on_press: root.CalculateLaminaStrength()
+        BoxLayout:
+            Label:
+                #text: 'Sigma1t (MPa)'
+                text: '%s[sub]1t[/sub] (MPa)' % unichr(963)
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+            TextInput:
+                id: tensileStrength
+                text: '-'
+                readonly: True
+                input_type: 'number'
+        BoxLayout
+            Label:
+                #text: 'Sigma1c (MPa)'
+                text: '%s[sub]1c[/sub] (MPa)' % unichr(963)
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+            TextInput:
+                text: '-'
+                id: compressiveStrength
+                readonly: True
+        BoxLayout:
+            Label:
+                #text: 'Sigma1cShear (MPa)'
+                text: '%s[sub]1cShear[/sub] (MPa)' % unichr(963)
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+            TextInput:
+                text: '-'
+                id: compressiveStrengthShear
+                readonly: True
+        Button:
+            id: aboutStrength
+            text: "About"
+            on_press: root.AboutStrength()
+            
+
+<LaminaStrengthAbout>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+        Label:
+            text: "Variables:\nVF-Fiber volume fraction\nE[sub]f1[/sub]-Fiber longitudinal elastic modulus\n%s[sub]f1[/sub]-Fiber ultimate tensile strength\nE[sub]m[/sub]-Matrix elastic modulus\nG[sub]m[/sub]-Matrix shear modulus" % unichr(963)
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+        Label:
+            text: "Results:\n%s[sub]1t[/sub]-Composite longitudinal tensile strength\n%s[sub]1c[/sub]-Composite longitudinal compressive strength\n%s[sub]1cShear[/sub]-Composite compressive strength shear mode" % (unichr(963),unichr(963),unichr(963))
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True                
+        Button:
+            id: closeStrengthAbout
+            text: "Close"
+            on_press: root.cancel()
+            size_hint_y: '0.25dp'
+
+                
+<CoordinateTransform>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '5dp'
+        padding: '10dp'
+        BoxLayout:
+            Label:
+                #text: 'Braid Angle'
+                text: 'Braid Angle (%s)' % unichr(176)
+                #size_hint_y: None
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+            TextInput:
+                id: braidAngle
+                text: '45'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: angleDownButton
+                text: 'v'
+                on_press: root.AngleDown()
+                size_hint_x: '0.5dp'
+            Button:
+                id: angleUpButton
+                text: '^'
+                on_press: root.AngleUp()
+                size_hint_x: '0.5dp'
+        Button:
+            id: calculate
+            text: "Calculate"
+            on_press: root.CalculateTransform()
+        BoxLayout:
+            Label:
+                text: 'Transformation Matrix [T]'
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+        GridLayout:
+            rows: 3
+            cols: 3
+            TextInput:
+                text: '-'
+                id: T11
+                multiline: False
+            TextInput:
+                text: '-'
+                id: T12
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T13
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T21
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T22
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T23
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T31
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T32
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T33
+                multiline: False 
+                readonly: True
+        BoxLayout:
+            Label:
+                text: 'Inverse Transformation Matrix [T][sup]-1[/sup]' 
+                font_size: dp(20)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+        GridLayout:
+            rows: 3
+            cols: 3
+            TextInput:
+                text: '-'
+                id: T11inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T12inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T13inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T21inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T22inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T23inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T31inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T32inv
+                multiline: False
+                readonly: True
+            TextInput:
+                text: '-'
+                id: T33inv
+                multiline: False
+                readonly: True
+
+<BraidManufacturingAbout>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+        Label:
+            text: "Variables:\nR-Radius of braid mandrel\nW[sub]y[/sub]-Width of individual braid yarn\nN-Number of yarn carriers of braiding machine\nv-Take up speed of braid mandrel\n%s-Rotational speed of horn gears\n%s-Half cone angle between braid mandrel and convergence ring" % (unichr(969), unichr(947))
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+        Label:
+            text: "Results:\n%s-Braid angle, angle between mandrel longitudinal axis and yarn\n%s[sub]jammed[/sub]-Jam angle\nL[sub]und[/sub]-Undulation length of braid yarn\n%s-Shift angle between braid yarns" % (unichr(952),unichr(952), unichr(946))
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+        Button:
+            id: closeManufacturing
+            text: "Close"
+            on_press: root.cancel()
+            size_hint_y: '0.25dp'
+                
+<BraidManufacturing>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '5dp'
+        padding: '10dp'
+        BoxLayout:
+            Label:
+                text: 'Radius-R (mm)'
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: radius
+                text: '12.7'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: radiusDownButton
+                text: 'v'
+                on_press: root.RadiusDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: radiusUpButton
+                text: '^'
+                on_press: root.RadiusUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'Yarn Width-W[sub]y[/sub] (mm)'
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: yarnWidth
+                text: '3.1'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: yarnWidthDownButton
+                text: 'v'
+                on_press: root.yarnWidthDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: yarnWidthUpButton
+                text: '^'
+                on_press: root.yarnWidthUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'Number of Carriers-N'
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: carriers
+                text: '18'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: carriersDownButton
+                text: 'v'
+                on_press: root.CarriersDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: carriersUpButton
+                text: '^'
+                on_press: root.CarriersUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: 'Mandrel Velocity-v (mm/min)'
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: mandrelVelocity
+                text: '1.0'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: mandrelVelocityDownButton
+                text: 'v'
+                on_press: root.mandrelVelocityDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: mandrelVelocityUpButton
+                text: '^'
+                on_press: root.mandrelVelocityUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: "Carrier Speed-%s (rev/min)" % unichr(969)
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: carrierSpeed
+                text: '75.0'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: carrierSpeedDownButton
+                text: 'v'
+                on_press: root.carrierSpeedDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: carrierSpeedUpButton
+                text: '^'
+                on_press: root.carrierSpeedUp()
+                size_hint_x: '0.25dp'
+        BoxLayout:
+            Label:
+                text: "Half Cone Angle-%s (%s)" % (unichr(947),unichr(176))
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: halfConeAngle
+                text: '15.0'
+                multiline: False
+                #size_hint_y: None
+                input_type: 'number'
+            Button:
+                id: halfConeAngleDownButton
+                text: 'v'
+                on_press: root.halfConeAngleDown()
+                size_hint_x: '0.25dp'
+            Button:
+                id: halfConeAngleUpButton
+                text: '^'
+                on_press: root.halfConeAngleUp()
+                size_hint_x: '0.25dp'
+        Button:
+            id: calculate
+            text: "Calculate"
+            on_press: root.CalculateManufacture()
+        BoxLayout:
+            Label:
+                text: "Braid Angle-%s (%s)" % (unichr(952),unichr(176))
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: braidAngle
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                readonly: True
+        BoxLayout:
+            Label:
+                text: "Jam Angle-%s (%s)" % (unichr(952),unichr(176))
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: braidJamAngle
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                readonly: True
+        BoxLayout:
+            Label:
+                text: 'Yarn Undulation-L[sub]und[/sub] (mm)'
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                markup: True
+                #size_hint_y: None
+            TextInput:
+                id: yarnUndulation
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                readonly: True
+        BoxLayout:
+            Label:
+                text: 'Shift Angle-%s (rad)' % unichr(946)
+                font_size: dp(15)
+                text_size: self.size
+                halign: 'center'
+                #size_hint_y: None
+            TextInput:
+                id: shiftAngle
+                text: '-'
+                multiline: False
+                #size_hint_y: None
+                readonly: True
+        Button:
+            id: aboutManufacturing
+            text: "About"
+            on_press: root.AboutManufacturing()  
+
+<MachineSetup>:
+    BoxLayout:
+        orientation: 'vertical'
+        Image:
+			id: patternImage
+			size_hint_y: None
+			height: dp(300)
+            source: 'BraidMachine/BraidMachine.jpg'
+        Spinner:
+            id: braidPatternSpinner
+            text: "Select Braid Pattern"
+            values: "Diamond Full", "Diamond Half", "Regular Full", "Regular One-Third", "Hercules"
+            on_text: root.patternSelect()
+        ProgressBar:
+            id: imageProgressBar
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                id: backButton
+                text: '<'
+                on_press: root.backButton()
+            Button:
+                id: forwardButton
+                text: '>'
+                on_press: root.forwardButton()
+        Button:
+            id: aboutMachineSetup
+            text: "About"
+            on_press: root.AboutMachineSetup()
+            size_hint_y: '0.5dp'
+
+        
+<MachineSetupAbout>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+        height: dp(40)
+        Label:
+            text: "This window shows the procedure to create Diamond Full Load (36 carriers), Diamond Half Load (18 Carriers), Regular Full Load (36 carriers), Regular One-third load (12 carriers) or Hercules (18 carriers) braid patterns usings an 18 horn gear braid machine. Similar procedures can be followed to produce these braid patterns on different braiding machines"
+            font_size: dp(10)
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.size
+            markup: True
+            height: dp(40)
+        Button:
+            id: closeVolumeFraction
+            text: "Close"
+            #font_size: dp(5)
+            on_press: root.cancel()
+            #size_hint_y: None  
+            size_hint_y: '0.25dp'
+                
+    
+                
+<ScreenMenu>:
+    text: 'Main'
+    values: ('Main', 'Micromechanics', 'Lamina Strength', 'CS Transform', 'Braid Manufacturing', 'Volume Fraction', 'Angle', 'Braid Machine Setup', 'About')
+    #size_hint: None, None
+    #size: 500, 44
+    size_hint_y: .1
+    #color: (1,1,1,1)
+    #color: 0.96, 0.519, 0.140, 1
+    background_color: 0,0.8156,1,1
+    #background_normal: 0.96, 0.519, 0.140, 1
+

@@ -1,0 +1,3 @@
+title=braidedcompositedesignapp
+author=Garrett Melenka
+orientation=portrait
