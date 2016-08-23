@@ -1,4 +1,6 @@
 # BraidedCompositeDesign
+![Braided Composite Design](https://raw.githubusercontent.com/gmelenka/BraidedCompositeDesign/master/CompositeAppLogo_256.png)
+
 Braided Composite Design application for mobile devices 
 
 This application was designed using Kivy (http://kivy.org/#home) to provide a cross-platform tool for the design and manufacture of braided composites.
